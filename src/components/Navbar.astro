@@ -1,0 +1,20 @@
+---
+const navItems = [
+  { href: '/', label: '主页' },
+  { href: '/sports', label: '运动规则' },
+  { href: '/about', label: '关于' },
+];
+---
+<nav class="navbar">
+  <div class="navbar__brand">SportRule</div>
+  <details class="navbar__menu">
+    <summary class="navbar__toggle" aria-label="切换导航">☰</summary>
+    <ul class="navbar__list">
+      {navItems.map((item) => (
+        <li class="navbar__item">
+          <a class="navbar__link" href={item.href}>{item.label}</a>
+        </li>
+      ))}
+    </ul>
+  </details>
+</nav>

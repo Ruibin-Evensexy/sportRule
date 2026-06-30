@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sports, getSportBySlug } from '../../data/sports';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return sports.map((sport) => ({ params: { slug: sport.slug } }));
+}
+
+const { slug } = Astro.params;
+const sport = getSportBySlug(slug);
+---
+<BaseLayout>
+  <span slot="title">{sport ? sport.label : '规则详情'}</span>
+  {sport ? (
+    <section class="card">
+      <div class="sport-detail__header">
+        <div class="sport-detail__icon">{sport.icon}</div>
+        <div>
+          <h1>{sport.label} 规则</h1>
+          <p>{sport.details}</p>
+        </div>
+      </div>
+      <div class="sport-detail__rules">
+        {sport.rules.map((rule) => (
+          <article class="rule-item" key={rule.title}>
+            <h3>{rule.title}</h3>
+            <p>{rule.description}</p>
+          </article>
+        ))}
+      </div>
+      <a class="button button--secondary" href="/sports">返回运动导航</a>
+    </section>
+  ) : (
+    <section class="card">
+      <h1>未找到该运动规则</h1>
+      <p>请返回运动导航并选择其他项目。</p>
+      <a class="button button--secondary" href="/sports">返回运动导航</a>
+    </section>
+  )}
+</BaseLayout>

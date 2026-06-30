@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const title = '关于 SportRule';
+---
+<BaseLayout>
+  <span slot="title">{title}</span>
+  <section class="card">
+    <h1>{title}</h1>
+    <p>SportRule 是一个运动规则说明平台，提供官方规则简介与实用要点。</p>
+    <p>当前支持以下运动：</p>
+    <ul>
+      <li>游泳</li>
+      <li>篮球</li>
+      <li>足球</li>
+      <li>网球</li>
+      <li>羽毛球</li>
+    </ul>
+    <p>你也可以通过新增 `src/data/sports.ts` 中的规则对象，快速扩展更多运动项目。</p>
+  </section>
+</BaseLayout>

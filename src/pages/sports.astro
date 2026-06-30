@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { sports } from '../data/sports';
+const title = '运动规则导航';
+---
+<BaseLayout>
+  <span slot="title">{title}</span>
+  <section class="hero card">
+    <h1>{title}</h1>
+    <p>浏览官方运动规则说明，支持持续添加新的运动项目。</p>
+  </section>
+
+  <section class="grid">
+    {sports.map((sport) => (
+      <article class="sport-card" key={sport.slug}>
+        <div class="sport-card__icon">{sport.icon}</div>
+        <h2>{sport.label}</h2>
+        <p>{sport.summary}</p>
+        <a class="button" href={`/sports/${sport.slug}`}>查看规则</a>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
