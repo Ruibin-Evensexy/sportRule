@@ -1,8 +1,9 @@
 ---
+const basePath = Astro.site ? new URL(Astro.site).pathname : '/';
 const navItems = [
-  { href: '/', label: '主页' },
-  { href: '/sports', label: '运动规则' },
-  { href: '/about', label: '关于' },
+  { href: basePath, label: '主页' },
+  { href: `${basePath}sports`, label: '运动规则' },
+  { href: `${basePath}about`, label: '关于' },
 ];
 ---
 <nav class="navbar">
