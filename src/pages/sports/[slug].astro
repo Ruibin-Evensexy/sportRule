@@ -22,15 +22,53 @@ const sport = getSportBySlug(slug);
           <p>{sport.details}</p>
         </div>
       </div>
-      <div class="sport-detail__rules">
-        {sport.rules.map((rule) => (
-          <article class="rule-item" key={rule.title}>
-            <h3>{rule.title}</h3>
-            <p>{rule.description}</p>
-          </article>
-        ))}
+      <div class="rule-toggle">
+        <button id="toggleView" class="button button--secondary" type="button" aria-pressed="false">显示详细规则</button>
       </div>
+
+      <div class="sport-detail__rules">
+        <div class="rules-brief">
+          {sport.rules.map((rule) => (
+            <article class="rule-item brief-item" key={rule.title}>
+              <h3>{rule.title}</h3>
+            </article>
+          ))}
+        </div>
+
+        <div class="rules-detailed" hidden>
+          {sport.rules.map((rule) => (
+            <article class="rule-item" key={rule.title}>
+              <h3>{rule.title}</h3>
+              <p>{rule.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+
       <a class="button button--secondary" href="/sportRule/">返回运动导航</a>
+
+      <script type="module">
+        const btn = document.getElementById('toggleView');
+        const brief = document.querySelector('.rules-brief');
+        const detailed = document.querySelector('.rules-detailed');
+        if (btn && brief && detailed) {
+          btn.addEventListener('click', () => {
+            const pressed = btn.getAttribute('aria-pressed') === 'true';
+            btn.setAttribute('aria-pressed', String(!pressed));
+            if (pressed) {
+              // switch to brief
+              detailed.hidden = true;
+              brief.hidden = false;
+              btn.textContent = '显示详细规则';
+            } else {
+              // switch to detailed
+              brief.hidden = true;
+              detailed.hidden = false;
+              btn.textContent = '显示简要规则';
+            }
+          });
+        }
+      </script>
     </section>
   ) : (
     <section class="card">

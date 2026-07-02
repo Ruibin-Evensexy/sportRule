@@ -214,3 +214,30 @@ button {
     padding-top: 0.75rem;
   }
 }
+
+/* Rule view toggle styles */
+.rule-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.rules-brief .brief-item h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.rules-detailed .rule-item h3 {
+  margin: 0;
+}
+
+.brief-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.05);
+}
+
+@media (max-width: 720px) {
+  .rule-toggle {
+    justify-content: stretch;
+  }
+}
