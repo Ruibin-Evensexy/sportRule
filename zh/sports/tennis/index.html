@@ -7,16 +7,16 @@
           btn.addEventListener('click', () => {
             const pressed = btn.getAttribute('aria-pressed') === 'true';
             btn.setAttribute('aria-pressed', String(!pressed));
+            const detailText = btn.dataset.detail ?? '显示详细规则';
+            const briefText = btn.dataset.brief ?? '显示简要规则';
             if (pressed) {
-              // switch to brief
               detailed.hidden = true;
               brief.hidden = false;
-              btn.textContent = '显示详细规则';
+              btn.textContent = detailText;
             } else {
-              // switch to detailed
               brief.hidden = true;
               detailed.hidden = false;
-              btn.textContent = '显示简要规则';
+              btn.textContent = briefText;
             }
           });
         }
