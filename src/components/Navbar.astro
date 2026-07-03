@@ -1,21 +1,38 @@
 ---
-const basePath = Astro.site ? new URL(Astro.site).pathname : '/';
-const navItems = [
-  { href: basePath, label: '主页' },
-  { href: `${basePath}sports`, label: '运动规则' },
-  { href: `${basePath}about`, label: '关于' },
-];
+import { getBasePath, getRoute, localeLabels, locales, navLabels, switchLocalePath } from '../data/i18n';
+const { locale = 'zh', currentPath = '/' } = Astro.props;
+const siteBase = Astro.site ?? '';
+const basePath = getBasePath(siteBase);
+const nav = navLabels[locale] ?? navLabels.zh;
 ---
 <nav class="navbar">
-  <div class="navbar__brand">SportRule</div>
+  <div>
+    <div class="navbar__brand">SportRule</div>
+  </div>
+
   <details class="navbar__menu">
     <summary class="navbar__toggle" aria-label="切换导航">☰</summary>
     <ul class="navbar__list">
-      {navItems.map((item) => (
-        <li class="navbar__item">
-          <a class="navbar__link" href={item.href}>{item.label}</a>
-        </li>
-      ))}
+      <li class="navbar__item">
+        <a class="navbar__link" href={`${basePath}${getRoute(locale)}`}>{nav.home}</a>
+      </li>
+      <li class="navbar__item">
+        <a class="navbar__link" href={`${basePath}${getRoute(locale, 'sports')}`}>{nav.sports}</a>
+      </li>
+      <li class="navbar__item">
+        <a class="navbar__link" href={`${basePath}${getRoute(locale, 'about')}`}>{nav.about}</a>
+      </li>
     </ul>
   </details>
+
+  <div class="lang-switcher">
+    {locales.map((lang) => (
+      <a
+        class={lang === locale ? 'lang-link lang-link--active' : 'lang-link'}
+        href={switchLocalePath(currentPath, lang, siteBase)}
+      >
+        {localeLabels[lang]}
+      </a>
+    ))}
+  </div>
 </nav>

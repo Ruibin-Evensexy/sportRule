@@ -1,24 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { sports } from '../data/sports';
-const title = 'SportRule 运动规则说明';
-const description = '提供游泳、篮球、足球、网球、羽毛球等官方规则说明，并支持持续添加新的运动项目。';
+import { getPath, texts } from '../data/i18n';
+const locale = 'zh';
+const t = texts[locale];
 ---
-<BaseLayout>
-  <span slot="title">{title}</span>
+<BaseLayout lang={locale} currentPath={Astro.url.pathname} pageTitle={t.siteTitle} description={t.homeDescription}>
+  <span slot="title">{t.siteTitle}</span>
   <section class="hero card">
-    <h1>{title}</h1>
-    <p>{description}</p>
-    <p>在这里你可以快速浏览运动规则、查看各项比赛的基础说明与官方要点。</p>
+    <h1>{t.siteTitle}</h1>
+    <p>{t.homeDescription}</p>
+    <p>{t.homeIntro}</p>
   </section>
 
   <section class="grid">
     {sports.map((sport) => (
       <article class="sport-card" key={sport.slug}>
         <div class="sport-card__icon">{sport.icon}</div>
-        <h2>{sport.label}</h2>
-        <p>{sport.summary}</p>
-        <a class="button" href={`sports/${sport.slug}`}>查看规则</a>
+        <h2>{sport.label[locale]}</h2>
+        <p>{sport.summary[locale]}</p>
+        <a class="button" href={getPath(locale, `sports/${sport.slug}`, Astro.site)}>{t.viewRules}</a>
       </article>
     ))}
   </section>

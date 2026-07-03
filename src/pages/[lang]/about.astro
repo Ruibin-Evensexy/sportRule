@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sports } from '../../data/sports';
+import { normalizeLocale, texts } from '../../data/i18n';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return ['zh', 'en', 'de'].map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const locale = normalizeLocale(lang);
+const t = texts[locale];
+---
+<BaseLayout lang={locale} currentPath={Astro.url.pathname} pageTitle={t.aboutTitle} description={t.homeDescription}>
+  <span slot="title">{t.aboutTitle}</span>
+  <section class="card">
+    <h1>{t.aboutTitle}</h1>
+    <p>{t.aboutIntro}</p>
+    <p>{t.aboutSupport}</p>
+    <ul>
+      {sports.map((sport) => (
+        <li key={sport.slug}>{sport.label[locale]}</li>
+      ))}
+    </ul>
+    <p>{t.aboutExtend}</p>
+  </section>
+</BaseLayout>

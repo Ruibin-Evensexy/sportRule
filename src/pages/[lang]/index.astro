@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sports } from '../../data/sports';
+import { getPath, locales, texts } from '../../data/i18n';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = texts[lang] ?? texts.zh;
+---
+<BaseLayout lang={lang} currentPath={Astro.url.pathname} pageTitle={t.siteTitle} description={t.homeDescription}>
+  <span slot="title">{t.siteTitle}</span>
+  <section class="hero card">
+    <h1>{t.siteTitle}</h1>
+    <p>{t.homeDescription}</p>
+    <p>{t.homeIntro}</p>
+  </section>
+
+  <section class="grid">
+    {sports.map((sport) => (
+      <article class="sport-card" key={sport.slug}>
+        <div class="sport-card__icon">{sport.icon}</div>
+        <h2>{sport.label[lang]}</h2>
+        <p>{sport.summary[lang]}</p>
+        <a class="button" href={getPath(lang, `sports/${sport.slug}`, Astro.site)}>{t.viewRules}</a>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

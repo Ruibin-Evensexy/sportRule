@@ -1,19 +1,21 @@
 ---
 import Navbar from '../components/Navbar.astro';
 import '../styles/global.css';
+const { lang = 'zh', currentPath = '/', pageTitle = 'SportRule', description = 'SportRule：运动官方规则说明与多端导航页面。' } = Astro.props;
 const basePath = Astro.site ? new URL(Astro.site).pathname : '/';
+const langAttr = lang === 'zh' ? 'zh-CN' : lang;
 ---
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang={langAttr}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="SportRule：运动官方规则说明与多端导航页面。" />
+    <meta name="description" content={description} />
     <base href={basePath} />
-    <title>SportRule</title>
+    <title>{pageTitle}</title>
   </head>
   <body>
-    <Navbar />
+    <Navbar locale={lang} currentPath={currentPath} />
     <main class="container">
       <slot />
     </main>

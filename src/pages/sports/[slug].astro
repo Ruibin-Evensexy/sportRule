@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sports, getSportBySlug } from '../../data/sports';
+import { getPath, texts } from '../../data/i18n';
 
 export const prerender = true;
 
@@ -9,43 +10,55 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
+const locale = 'zh';
+const t = texts[locale];
 const sport = getSportBySlug(slug);
 ---
-<BaseLayout>
-  <span slot="title">{sport ? sport.label : '规则详情'}</span>
+<BaseLayout lang={locale} currentPath={Astro.url.pathname} pageTitle={sport ? sport.label[locale] : t.notFoundTitle} description={sport ? sport.details[locale] : t.homeDescription}>
+  <span slot="title">{sport ? sport.label[locale] : t.notFoundTitle}</span>
   {sport ? (
     <section class="card">
       <div class="sport-detail__header">
         <div class="sport-detail__icon">{sport.icon}</div>
         <div>
-          <h1>{sport.label} 规则</h1>
-          <p>{sport.details}</p>
+          <h1>{sport.label[locale]} 规则</h1>
+          <p>{sport.details[locale]}</p>
         </div>
       </div>
       <div class="rule-toggle">
-        <button id="toggleView" class="button button--secondary" type="button" aria-pressed="false">显示详细规则</button>
+        <button
+          id="toggleView"
+          class="button button--secondary"
+          type="button"
+          aria-pressed="false"
+          data-detail={t.showDetail}
+          data-brief={t.showBrief}
+        >
+          {t.showDetail}
+        </button>
       </div>
 
       <div class="sport-detail__rules">
         <div class="rules-brief">
           {sport.rules.map((rule) => (
-            <article class="rule-item brief-item" key={rule.title}>
-              <h3>{rule.title}</h3>
+            <article class="rule-item brief-item" key={rule.title[locale]}>
+              <h3>{rule.title[locale]}</h3>
+              <p>{rule.brief[locale]}</p>
             </article>
           ))}
         </div>
 
         <div class="rules-detailed" hidden>
           {sport.rules.map((rule) => (
-            <article class="rule-item" key={rule.title}>
-              <h3>{rule.title}</h3>
-              <p>{rule.description}</p>
+            <article class="rule-item" key={rule.title[locale]}>
+              <h3>{rule.title[locale]}</h3>
+              <p>{rule.detail[locale]}</p>
             </article>
           ))}
         </div>
       </div>
 
-      <a class="button button--secondary" href="/sportRule/">返回运动导航</a>
+      <a class="button button--secondary" href={getPath(locale, '', Astro.site)}>{t.returnHome}</a>
 
       <script type="module">
         const btn = document.getElementById('toggleView');

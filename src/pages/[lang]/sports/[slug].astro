@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { sports, getSportBySlug } from '../../../data/sports';
+import { getPath, normalizeLocale, texts } from '../../../data/i18n';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return sports.flatMap((sport) => (
+    ['zh', 'en', 'de'].map((lang) => ({ params: { lang, slug: sport.slug } }))
+  ));
+}
+
+const { lang, slug } = Astro.params;
+const locale = normalizeLocale(lang);
+const t = texts[locale];
+const sport = getSportBySlug(slug);
+const sportLabel = sport ? sport.label[locale] : '';
+const sportDetails = sport ? sport.details[locale] : '';
+---
+<BaseLayout lang={locale} currentPath={Astro.url.pathname} pageTitle={sport ? sportLabel : t.notFoundTitle} description={sport ? sportDetails : t.homeDescription}>
+  <span slot="title">{sport ? sportLabel : t.notFoundTitle}</span>
+  {sport ? (
+    <section class="card">
+      <div class="sport-detail__header">
+        <div class="sport-detail__icon">{sport.icon}</div>
+        <div>
+          <h1>{sportLabel} {t.rulesLabel}</h1>
+          <p>{sportDetails}</p>
+        </div>
+      </div>
+      <div class="rule-toggle">
+        <button
+          id="toggleView"
+          class="button button--secondary"
+          type="button"
+          aria-pressed="false"
+          data-detail={t.showDetail}
+          data-brief={t.showBrief}
+        >
+          {t.showDetail}
+        </button>
+      </div>
+
+      <div class="sport-detail__rules">
+        <div class="rules-brief">
+          {sport.rules.map((rule) => (
+            <article class="rule-item brief-item" key={rule.title[locale]}>
+              <h3>{rule.title[locale]}</h3>
+              <p>{rule.brief[locale]}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="rules-detailed" hidden>
+          {sport.rules.map((rule) => (
+            <article class="rule-item" key={rule.title[locale]}>
+              <h3>{rule.title[locale]}</h3>
+              <p>{rule.detail[locale]}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <a class="button button--secondary" href={getPath(locale, '', Astro.site)}>{t.returnHome}</a>
+
+      <script type="module">
+        const btn = document.getElementById('toggleView');
+        const brief = document.querySelector('.rules-brief');
+        const detailed = document.querySelector('.rules-detailed');
+        if (btn && brief && detailed) {
+          btn.addEventListener('click', () => {
+            const pressed = btn.getAttribute('aria-pressed') === 'true';
+            btn.setAttribute('aria-pressed', String(!pressed));
+            const detailText = btn.dataset.detail ?? '显示详细规则';
+            const briefText = btn.dataset.brief ?? '显示简要规则';
+            if (pressed) {
+              detailed.hidden = true;
+              brief.hidden = false;
+              btn.textContent = detailText;
+            } else {
+              brief.hidden = true;
+              detailed.hidden = false;
+              btn.textContent = briefText;
+            }
+          });
+        }
+      </script>
+    </section>
+  ) : (
+    <section class="card">
+      <h1>{t.notFoundTitle}</h1>
+      <p>{t.notFoundMessage}</p>
+      <a class="button button--secondary" href={getPath(locale, '', Astro.site)}>{t.returnHome}</a>
+    </section>
+  )}
+</BaseLayout>
